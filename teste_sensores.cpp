@@ -43,7 +43,7 @@ void loop() {
   Distancia = lerDistancia();
 
 
-  //---------Serial print ------------------------
+  //--------- Mostra a distancia pelo sensor ultrassonico e mostra os estados dos sensores infra 1 ou 0 ------------------------
   Serial.print("Sensor esquerdo:");
   Serial.println( EstadoSensorEsquerdo);
 
