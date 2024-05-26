@@ -1,16 +1,19 @@
-#define pinoTrigger 12        // Pino Trigger do sensor ultrassônico
-#define pinoEcho 11           // Pino Echo do sensor ultrassônico
-#define pinoMotorEsquerdo1 14 // Pino 1 do motor esquerdo
-#define pinoMotorEsquerdo2 15 // Pino 2 do motor esquerdo
-#define pinoMotorDireito1 16  // Pino 1 do motor direito
-#define pinoMotorDireito2 17  // Pino 2 do motor direito
-#define pinoSensorEsquerdo 4  // Pino do sensor de linha esquerdo
-#define pinoSensorDireito 3   // Pino do sensor de linha direito
-#define botao 2               // Botao de inicio
+#include <IRremote.h>
 
-// Variaveis de controle
-int ligado = false;
-int trava = true;
+// Definições de pinos
+#define pinoTrigger 7         // Pino Trigger do sensor ultrassônico
+#define pinoEcho 8            // Pino Echo do sensor ultrassônico
+#define pinoMotorEsquerdo1 3  // Pino 1 do motor esquerdo
+#define pinoMotorEsquerdo2 5  // Pino 2 do motor esquerdo
+#define pinoMotorDireito1 6   // Pino 1 do motor direito
+#define pinoMotorDireito2 9   // Pino 2 do motor direito
+#define pinoSensorEsquerdo 11   // Pino do sensor de linha esquerdo
+#define pinoSensorDireito 12    // Pino do sensor de linha direito
+#define receptor 10             // Receptor Infravermelho
+
+// Variáveis de controle
+bool ligado = false;
+bool trava = true;
 
 // Variáveis para controle do sensor ultrassônico
 long duracao;
@@ -22,6 +25,14 @@ bool sensorDireitoDetectado = false;
 
 // Variável para controle da velocidade
 int velocidade = 200; // Velocidade inicial
+
+// Inicializa o receptor IR
+IRrecv irrecv(receptor);
+decode_results results;
+
+// Lista de códigos válidos para ativar e desativar o robô
+unsigned long codigoAtivacao = 0xA90;
+unsigned long codigoDesativacao = 0xB90; 
 
 void setup() {
   // Inicializa comunicação serial para debug
@@ -36,48 +47,75 @@ void setup() {
   pinMode(pinoMotorDireito2, OUTPUT);
   pinMode(pinoSensorEsquerdo, INPUT);
   pinMode(pinoSensorDireito, INPUT);
+  pinMode(receptor, INPUT);
+
+  // Inicia o receptor IR
+  irrecv.enableIRIn();
 }
 
 void loop() {
-  int botao_ativador = digitalRead(botao);
-  if (botao_ativador == 0) {
-    trava = false;
+  // Recebe sinal infravermelho
+  if (irrecv.decode(&results)) {
+    // Verifica se o código é de ativação
+    if (results.value == codigoAtivacao) {
+      trava = false;
+      Serial.println("Ativando...");
+    }
+    // Verifica se o código é de desativação
+    if (results.value == codigoDesativacao) {
+      parar();
+      ligado = false;
+      trava = true; 
+      Serial.println("Desativando...");
+    }
+    irrecv.resume(); 
   }
-  if (botao_ativador == 1 && trava == false) {
-    Serial.print("iniciando");
-    delay(5000);
+
+  // Inicia a operação se a trava estiver desabilitada
+  if (!trava) {
     frente();
     ligado = true;
     trava = true;
   }
-  if (ligado == true) {
+
+  // Operação principal
+  if (ligado) {
     // Lê os sensores de linha
     sensorEsquerdoDetectado = digitalRead(pinoSensorEsquerdo);
     sensorDireitoDetectado = digitalRead(pinoSensorDireito);
 
-    // Se detectar a linha, realiza manobra para voltar à arena
+    // Realiza manobra para voltar à arena
     if (sensorEsquerdoDetectado) {
       parar();
-      delay(100);
+      delay(1);
       re();
       delay(300);
+      parar();
+      delay(1);
       virarDireita();
+      delay(600);
+      parar();
     } else if (sensorDireitoDetectado) {
       parar();
-      delay(100);
+      delay(1);
       re();
       delay(300);
+      parar();
+      delay(1);
       virarEsquerda();
+      delay(600);
+      parar();
     } else {
       // Lê a distância do sensor ultrassônico
       distancia = lerDistancia();
 
-      // Se detectar o oponente, avança
+      // Avança se detectar o oponente
       if (distancia < 20) {
         frente();
       } else {
-        // Se não detectar o oponente, procura em volta
+        // Procura o oponente
         procurarOponente();
+        delay(100);
       }
     }
   }
@@ -96,7 +134,6 @@ int lerDistancia() {
 }
 
 // Funções de movimento do robô
-
 void frente() {
   analogWrite(pinoMotorEsquerdo1, velocidade);
   digitalWrite(pinoMotorEsquerdo2, LOW);
@@ -142,6 +179,7 @@ void parar() {
 void procurarOponente() {
   // Gira em torno do próprio eixo
   girar();
-  delay(500); // Ajustar tempo de giro
+  delay(1000); // Ajustar tempo de giro
   parar();
+  delay(1);
 }
