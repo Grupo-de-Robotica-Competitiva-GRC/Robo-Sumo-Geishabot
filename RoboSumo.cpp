@@ -7,9 +7,9 @@
 #define pinoMotorEsquerdo2 5  // Pino 2 do motor esquerdo
 #define pinoMotorDireito1 6   // Pino 1 do motor direito
 #define pinoMotorDireito2 9   // Pino 2 do motor direito
-#define pinoSensorEsquerdo 11   // Pino do sensor de linha esquerdo
-#define pinoSensorDireito 12    // Pino do sensor de linha direito
-#define receptor 10             // Receptor Infravermelho
+#define pinoSensorEsquerdo 11 // Pino do sensor de linha esquerdo
+#define pinoSensorDireito 12  // Pino do sensor de linha direito
+#define receptor 10           // Receptor Infravermelho
 
 // Variáveis de controle
 bool ligado = false;
@@ -31,8 +31,8 @@ IRrecv irrecv(receptor);
 decode_results results;
 
 // Lista de códigos válidos para ativar e desativar o robô
-unsigned long codigoAtivacao = 0xA90;
-unsigned long codigoDesativacao = 0xB90; 
+unsigned long codigoAtivacao =  0xFC03EF00;
+unsigned long codigoDesativacao = 0xFD02EF00;
 
 void setup() {
   // Inicializa comunicação serial para debug
@@ -55,29 +55,23 @@ void setup() {
 
 void loop() {
   // Recebe sinal infravermelho
-  if (irrecv.decode(&results)) {
+  if (irrecv.decode()) {
+    unsigned long codigoRecebido = irrecv.decodedIRData.decodedRawData; 
+    
     // Verifica se o código é de ativação
-    if (results.value == codigoAtivacao) {
-      trava = false;
+    if (codigoRecebido == codigoAtivacao) {
+      ligado = true;
       Serial.println("Ativando...");
     }
     // Verifica se o código é de desativação
-    if (results.value == codigoDesativacao) {
+    if (codigoRecebido == codigoDesativacao) {
       parar();
       ligado = false;
-      trava = true; 
       Serial.println("Desativando...");
     }
     irrecv.resume(); 
   }
-
-  // Inicia a operação se a trava estiver desabilitada
-  if (!trava) {
-    frente();
-    ligado = true;
-    trava = true;
-  }
-
+  
   // Operação principal
   if (ligado) {
     // Lê os sensores de linha
@@ -85,26 +79,10 @@ void loop() {
     sensorDireitoDetectado = digitalRead(pinoSensorDireito);
 
     // Realiza manobra para voltar à arena
-    if (sensorEsquerdoDetectado) {
-      parar();
-      delay(1);
-      re();
-      delay(300);
-      parar();
-      delay(1);
-      virarDireita();
-      delay(600);
-      parar();
-    } else if (sensorDireitoDetectado) {
-      parar();
-      delay(1);
-      re();
-      delay(300);
-      parar();
-      delay(1);
-      virarEsquerda();
-      delay(600);
-      parar();
+    if (!sensorEsquerdoDetectado) {
+      realizarManobraParaVoltar(true);
+    } else if (!sensorDireitoDetectado) {
+      realizarManobraParaVoltar(false);
     } else {
       // Lê a distância do sensor ultrassônico
       distancia = lerDistancia();
@@ -182,4 +160,22 @@ void procurarOponente() {
   delay(1000); // Ajustar tempo de giro
   parar();
   delay(1);
+}
+
+void realizarManobraParaVoltar(bool esquerdo) {
+  parar();
+  delay(1);
+  re();
+  delay(300);
+  parar();
+  delay(1);
+  if (esquerdo) {
+    virarDireita();
+  } else {
+    virarEsquerda();
+  }
+  delay(600);
+  parar();
+  delay(1);
+  frente();
 }
