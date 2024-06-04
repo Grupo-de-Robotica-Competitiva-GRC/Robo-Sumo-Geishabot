@@ -1,0 +1,85 @@
+// Definições de pinos
+#define pinoMotorEsquerdo1 3  // Pino 1 do motor esquerdo
+#define pinoMotorEsquerdo2 5  // Pino 2 do motor esquerdo
+#define pinoMotorDireito1 6   // Pino 1 do motor direito
+#define pinoMotorDireito2 9   // Pino 2 do motor direito
+
+// Variável para controle da velocidade
+int velocidade = 200; // Velocidade inicial
+
+void setup() {
+  // Inicializa comunicação serial para debug
+  Serial.begin(9600);
+
+  // Define os pinos como saída
+  pinMode(pinoMotorEsquerdo1, OUTPUT);
+  pinMode(pinoMotorEsquerdo2, OUTPUT);
+  pinMode(pinoMotorDireito1, OUTPUT);
+  pinMode(pinoMotorDireito2, OUTPUT);
+}
+
+void loop() {
+  // Testa a função frente
+  Serial.println("Movendo para frente");
+  frente();
+  delay(2000); // Move para frente por 2 segundos
+  parar();
+  delay(1000); // Pausa por 1 segundo
+
+  // Testa a função re
+  Serial.println("Movendo para trás");
+  re();
+  delay(2000); // Move para trás por 2 segundos
+  parar();
+  delay(1000); // Pausa por 1 segundo
+
+  // Testa a função virarEsquerda
+  Serial.println("Virando para a esquerda");
+  virarEsquerda();
+  delay(2000); // Vira para a esquerda por 2 segundos
+  parar();
+  delay(1000); // Pausa por 1 segundo
+
+  // Testa a função virarDireita
+  Serial.println("Virando para a direita");
+  virarDireita();
+  delay(2000); // Vira para a direita por 2 segundos
+  parar();
+  delay(1000); // Pausa por 1 segundo
+}
+
+// Funções de movimento do robô
+void frente() {
+  analogWrite(pinoMotorEsquerdo1, velocidade);
+  digitalWrite(pinoMotorEsquerdo2, LOW);
+  analogWrite(pinoMotorDireito1, velocidade);
+  digitalWrite(pinoMotorDireito2, LOW);
+}
+
+void re() {
+  digitalWrite(pinoMotorEsquerdo1, LOW);
+  analogWrite(pinoMotorEsquerdo2, velocidade);
+  digitalWrite(pinoMotorDireito1, LOW);
+  analogWrite(pinoMotorDireito2, velocidade);
+}
+
+void virarEsquerda() {
+  digitalWrite(pinoMotorEsquerdo1, LOW);
+  analogWrite(pinoMotorEsquerdo2, velocidade);
+  analogWrite(pinoMotorDireito1, velocidade);
+  digitalWrite(pinoMotorDireito2, LOW);
+}
+
+void virarDireita() {
+  analogWrite(pinoMotorEsquerdo1, velocidade);
+  digitalWrite(pinoMotorEsquerdo2, LOW);
+  digitalWrite(pinoMotorDireito1, LOW);
+  analogWrite(pinoMotorDireito2, velocidade);
+}
+
+void parar() {
+  digitalWrite(pinoMotorEsquerdo1, LOW);
+  digitalWrite(pinoMotorEsquerdo2, LOW);
+  digitalWrite(pinoMotorDireito1, LOW);
+  digitalWrite(pinoMotorDireito2, LOW);
+}
