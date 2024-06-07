@@ -29,7 +29,7 @@ unsigned long codigoDesativacao = 0xFD02EF00;
 // Funções de movimento do robô
 void frente() {
   digitalWrite(pinoMotorEsquerdo1, HIGH);
-  digitalWrite(pinoMotorEsquerdo2, LOW);
+  analogWrite(pinoMotorEsquerdo2, LOW);
   digitalWrite(pinoMotorDireito1, HIGH);
   digitalWrite(pinoMotorDireito2, LOW);
 }
@@ -113,28 +113,39 @@ void loop() {
   // Lê os sensores de linha
       sensorEsquerdoDetectado = digitalRead(pinoSensorEsquerdo);
       sensorDireitoDetectado = digitalRead(pinoSensorDireito);
-
+      Serial.println(sensorEsquerdoDetectado);
+      Serial.println(distancia);
       // Realiza manobra para voltar à arena
-      if (!sensorEsquerdoDetectado) { //se o esquerdo ver preto
+      if (sensorEsquerdoDetectado) {
+        parar();
+        delay(100);
         re(); //volta
-        delay(1000);
-      } else if (!sensorDireitoDetectado) { //se o direito ver preto
+        delay(300);
+      } else if (sensorDireitoDetectado) { 
+        parar();
+        delay(100);
         re();
-        delay(1000);
-      } else { //se ambos verem branco
+        delay(300);
+      } else {
         // Lê a distância do sensor ultrassônico
         distancia = lerDistancia();
 
         // Avança se detectar o oponente
         if (distancia < 40) {
           frente();
+          Serial.println("Frente");
         } else {
           // Procura o oponente
-          virarDireita();
+          parar();
+          delay(5); 
+          virarEsquerda();
+          delay(30);
+          Serial.println("Gira");
+        
         }
+        
       }
   } else {
     parar(); // Para os motores se não estiver ligado
-    //delay(1000);
   }
 }
