@@ -11,8 +11,8 @@ Para a montagem desse protótipo estaremos utilizando as seguintes peças.
     - Rodízio com esfera metálica;
     - Dois Módulos Seguidores de Linha TCRT5000;
     - Sensor Ultrassônico HC-SR04;
-    -  Receptor Infravermelho VS1838B;
-    -Duas rodas de 36mm de raio;
+    - Receptor Infravermelho VS1838B;
+    - Duas rodas de 36mm de raio;
     - Placa Perfurada Dupla Face 5x7cm;
     - Duas Baterias 3.7V;
     - Chave Gangorra KCD1-101 Pulsante;
