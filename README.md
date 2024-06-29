@@ -4,6 +4,7 @@ O Geishabot é um robô de ataque, equipado com rampa para empurrar seus oponent
 
 ## BILL OF MATERIALS
 Para a montagem desse protótipo estaremos utilizando as seguintes peças.
+
     - Arduino Nano V3.0;
     - Dois Micro Motores 6V DC N20 100RPM com Caixa de Redução;
     - Ponte H L9110 2-CHANNEL MOTOR DRIVER;
