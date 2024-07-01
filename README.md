@@ -2,6 +2,10 @@
 Código do robô sumô da equipe 1 da atividade final do GRC.
 O Geishabot é um robô de ataque, equipado com rampa para empurrar seus oponentes para fora do ringue. Além disso, ele possuí um sensor ultrassônico para identificar o adversário e dois sensores de linha para evitar a saída da arena.
 
+<div align="center">
+<img src="https://github.com/Grupo-de-Robotica-Competitiva-GRC/Robo-Sumo-Geishabot/assets/111692964/5fce3955-4c09-4fcf-89ad-abb79e65766a" width="400px" />
+</div>
+
 ## BILL OF MATERIALS
 Para a montagem desse protótipo estaremos utilizando as seguintes peças:
 
@@ -21,5 +25,5 @@ Para a montagem desse protótipo estaremos utilizando as seguintes peças:
 
 ## Esquemático do circuito
 <div align="center">
-<img src="https://github.com/Grupo-de-Robotica-Competitiva-GRC/Robo-Sumo-Geishabot/assets/111692964/afdc65e0-ca7e-49bd-9df0-f4e723c1646f)" width="700px" />
+<img src="https://github.com/Grupo-de-Robotica-Competitiva-GRC/Robo-Sumo-Geishabot/assets/111692964/afdc65e0-ca7e-49bd-9df0-f4e723c1646f" width="700px" />
 </div>
