@@ -18,3 +18,8 @@ Para a montagem desse protótipo estaremos utilizando as seguintes peças:
     - Chave Gangorra KCD1-101 Pulsante;
     - Adesivos;
     - Ferrarias;
+
+## Esquemático do circuito
+<div align="center">
+<img src="https://github.com/Grupo-de-Robotica-Competitiva-GRC/Robo-Sumo-Geishabot/assets/111692964/afdc65e0-ca7e-49bd-9df0-f4e723c1646f)" width="700px" />
+</div>
